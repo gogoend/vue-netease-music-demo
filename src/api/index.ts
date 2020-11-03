@@ -2,10 +2,8 @@ import axios from 'axios'
 
 axios.defaults.timeout = 1500000
 
-const devBase = 'http://120.77.146.86:3000'
-const proBase = 'http://120.77.146.86:3000'
 
-export const base = process.env.ENV_CONFIG === 'prod' ? proBase : devBase
+export const base = process.env.ENV_CONFIG === 'prod' ? '' : '/api'
 
 axios.interceptors.request.use(
   config => {
