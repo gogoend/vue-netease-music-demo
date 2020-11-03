@@ -10,13 +10,13 @@ export const base = process.env.ENV_CONFIG === 'prod' ? proBase : devBase
 axios.interceptors.request.use(
   config => {
     const token = 0
-    if(token){
+    if (token) {
       config.headers['X-Access-Token'] = token
     }
     return config
   },
   error => {
-    console.log(error) 
+    console.log(error)
     return Promise.reject(error)
   }
 )
@@ -38,17 +38,17 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-export const POST = (url, params) => {
+export const POST = (url: string, params: any) => {
   return axios.post(`${base}/${url}`, params).then(res =>
     res
   )
 }
 
-export const PUT = (url, params) => {
+export const PUT = (url: string, params: any) => {
   return axios.put(`${base}/${url}`, params).then(res => res)
 }
 
-export const GET = (url, params) => {
+export const GET = (url: string, params: any) => {
   return axios
     .get(`${base}/${url}`, {
       params: params
