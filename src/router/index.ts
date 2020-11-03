@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '../views/Home/index.vue'
 import NotFound from '../views/404.vue'
 
 import user from './user'

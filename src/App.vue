@@ -1,32 +1,68 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+  <div id="app" class="app-wrap">
+    <header>
+      <h1>网易云音乐 - 仿写测试</h1>
+      <section class="search-wrap">
+        <el-input /><el-button type="primary">搜索</el-button>
+      </section>
+    </header>
+    <section class="main-wrap">
+      <nav>
+        <ul>
+          <li><router-link to="/">首页</router-link></li>
+          <li><router-link to="/User">用户</router-link></li>
+        </ul>
+      </nav>
+      <main>
+        <router-view class="main-view" />
+      </main>
+    </section>
+    <footer>
+    </footer>
   </div>
 </template>
 
-<style lang="less">
-#app {
+<style lang="less" scoped>
+
+@header-height: 64px;
+@footer-height: 100px;
+
+.app-wrap {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-}
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+  header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex: 0 0 @header-height;
+    .search-wrap{
+      display: flex;
     }
+  }
+  section.main-wrap{
+    display: flex;
+    flex: 1;
+    max-height: calc( 100% - 164px );
+    nav{
+      flex: 0 0 200px;
+      overflow-y: auto;
+    }
+    main{
+      flex: 1;
+      overflow-y: auto;
+      .main-view{
+        height: 100%;
+      }
+    }
+  }
+  footer{
+    flex: 0 0 @footer-height
   }
 }
 </style>
