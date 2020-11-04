@@ -1,18 +1,20 @@
 <template>
   <div class="auth-page">
-      <!-- 111 -->
-      <keep-alive>
+    <!-- 111 -->
+    <keep-alive>
       <router-view></router-view>
-      </keep-alive>
-    </div>
+    </keep-alive>
+  </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
-<style>
-
+<style lang="less" scoped>
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>

@@ -1,28 +1,62 @@
 <template>
   <div class="login-page">
-    <h1>登录页面</h1>
-    <form>
-      <fieldset>
-        <legend>111</legend>
-        <label>
-          用户名：
-          <input autocomplete="off" />
-        </label>
-        <label>
-          密码：
-          <input autocomplete="off" type="password" name />
-        </label>
-      </fieldset>
-      <router-link to="/auth/reg" replace>去注册</router-link>
-      <button @click="$router.go(-1)" type="button">返回</button>
-      <button type="submit">提交</button>
-    </form>
+    <h1>登录到我的帐户</h1>
+    <el-form ref="loginForm">
+      <el-form-item label="邮箱">
+        <el-input v-model="formFields.email"></el-input>
+      </el-form-item>
+      <el-form-item label="密码">
+        <el-input
+          v-model="formFields.password"
+          autocomplete="off"
+          type="password"
+        ></el-input>
+      </el-form-item>
+      <section class="bottom-btns">
+        <router-link to="/auth/reg" replace>去注册</router-link>
+        <el-button type="primary" @click="handleSubmit">提交</el-button>
+      </section>
+    </el-form>
   </div>
 </template>
 
-<script>
-export default {};
+<script lang="ts">
+import { Component, Ref, Vue } from "vue-property-decorator";
+import { emailLogin } from "@/api/login";
+import md5 from "js-md5";
+
+import { Form as ElForm } from "element-ui";
+
+import { /*PhoneLoginParams*/ EmailLoginParams } from "@/types/login";
+
+@Component
+class LoginPage extends Vue {
+  @Ref() readonly loginForm!: ElForm;
+
+  private formFields: EmailLoginParams = {
+    email: "",
+    password: "",
+  };
+
+  private async handleSubmit(): Promise<void> {
+    const postData = Object.assign({}, this.formFields, {
+      'md5_password': md5(this.formFields.password),
+    });
+
+    const { data:res } = await emailLogin(postData);
+    console.log(postData, res);
+  }
+}
+
+export default LoginPage;
 </script>
 
-<style>
+<style scoped lang="less">
+.login-page {
+  .bottom-btns {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
 </style>
