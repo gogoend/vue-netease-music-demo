@@ -11,6 +11,7 @@
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
     "element-ui": "^2.14.0",
+    "js-md5": "^0.7.3",
     "normalize.css": "^8.0.1",
     "qs": "^6.9.4",
     "register-service-worker": "^1.7.1",
@@ -21,6 +22,7 @@
     "vuex": "^3.4.0"
   },
   "devDependencies": {
+    "@types/js-md5": "^0.4.2",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli-plugin-babel": "~4.5.0",
