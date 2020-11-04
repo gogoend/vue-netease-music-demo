@@ -21,11 +21,10 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   response => {
-    if (response.status === 200) {
-      return response
-    } else {
+    if (response.status !== 200) {
       console.error('请求失败')
     }
+    return response
   },
   error => {
     let msg = error.response.data.error.message
