@@ -3,7 +3,7 @@
     <header>
       <h1>Application</h1>
       <section class="user-profile" v-if="accountInfo">
-        <img :src="accountInfo.profile.avatarUrl" />
+        <img class="avatar" :src="accountInfo.profile.avatarUrl" />
         <span>{{accountInfo.profile.nickname}}</span>
       </section>
       <section class="search-wrap">
@@ -64,6 +64,11 @@ export default App;
     align-items: center;
     flex: 0 0 @header-height;
     background-color: #07f9b1;
+    .user-profile{
+      .avatar{
+        height: 48px;
+      }
+    }
     .search-wrap {
       display: flex;
     }
