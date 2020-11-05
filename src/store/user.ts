@@ -1,4 +1,4 @@
-import {Store} from 'vuex'
+import { ActionContextBasic } from './index'
 
 interface State {
     accountInfo: object | null;
@@ -22,8 +22,8 @@ export default {
         }
     },
     actions: {
-        updateAccountInfo({ commit,state }, payload = null) {
-            commit('UPDATE_ACCOUNT_INFO', payload)
+        updateAccountInfo(context: ActionContextBasic, payload = null): void {
+            context.commit('UPDATE_ACCOUNT_INFO', payload)
         }
     },
     modules: {

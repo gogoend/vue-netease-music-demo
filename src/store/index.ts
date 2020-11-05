@@ -1,5 +1,10 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, { Commit, Dispatch } from 'vuex'
+
+export interface ActionContextBasic {
+    commit: Commit;
+    dispatch: Dispatch;
+}
 
 import user from './user'
 

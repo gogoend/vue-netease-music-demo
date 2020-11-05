@@ -1,4 +1,4 @@
-import { GET, POST } from './index'
+import { /* GET, */ POST } from './index'
 
 import { PhoneLoginParams, EmailLoginParams } from '../types/login'
 

@@ -22,16 +22,27 @@
 
 <script lang="ts">
 import { Component, Ref, Vue } from "vue-property-decorator";
+import { namespace } from "vuex-class";
 import { emailLogin } from "@/api/login";
+
 import md5 from "js-md5";
 
 import { Form as ElForm } from "element-ui";
 
 import { /*PhoneLoginParams*/ EmailLoginParams } from "@/types/login";
 
+const userModule = namespace("user");
+
 @Component
 class LoginPage extends Vue {
   @Ref() readonly loginForm!: ElForm;
+
+  @userModule.Action("updateAccountInfo") private updateAccountInfo!: (
+    payload: unknown
+  ) => void;
+  @userModule.Getter("accountInfo") private accountInfo: unknown;
+
+  // (this: AbortSignal, ev: AbortSignalEventMap[K]) => any
 
   private formFields: EmailLoginParams = {
     email: "",
@@ -40,11 +51,21 @@ class LoginPage extends Vue {
 
   private async handleSubmit(): Promise<void> {
     const postData = Object.assign({}, this.formFields, {
-      'md5_password': md5(this.formFields.password),
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      md5_password: md5(this.formFields.password),
     });
 
-    const { data:res } = await emailLogin(postData);
-    console.log(postData, res);
+    try{
+      const { data: res } = await emailLogin(postData);
+      this.updateAccountInfo(res);
+      console.log(this.accountInfo);
+
+      if(res.code===200){
+        this.$router.replace('/User')
+      }
+    } catch(err) {
+      console.log(err)
+    }
   }
 }
 

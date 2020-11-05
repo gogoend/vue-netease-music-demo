@@ -1,9 +1,9 @@
 <template>
   <div id="app" class="app-wrap">
     <header>
-      <h1>网易云音乐 - 仿写测试</h1>
+      <h1>……</h1>
       <section class="search-wrap">
-        <el-input /><el-button type="primary">搜索</el-button>
+        <el-input clearable v-model="searchKeyword" /><el-button type="primary">搜索</el-button>
       </section>
     </header>
     <section class="main-wrap">
@@ -22,6 +22,17 @@
   </div>
 </template>
 
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator'
+
+@Component 
+class App extends Vue{
+  private searchKeyword = ''
+}
+
+export default App
+</script>
+
 <style lang="less" scoped>
 
 @header-height: 64px;
@@ -38,9 +49,11 @@
 
   header {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    padding: 0 48px;
     align-items: center;
     flex: 0 0 @header-height;
+    background-color: #07f9b1;
     .search-wrap{
       display: flex;
     }

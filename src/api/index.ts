@@ -35,17 +35,17 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-export const POST = (url: string, params: any) => {
+export const POST = (url: string, params: unknown) => {
   return axios.post(`${base}/${url}`, params).then(res =>
     res
   )
 }
 
-export const PUT = (url: string, params: any) => {
+export const PUT = (url: string, params: unknown) => {
   return axios.put(`${base}/${url}`, params).then(res => res)
 }
 
-export const GET = (url: string, params: any) => {
+export const GET = (url: string, params: unknown) => {
   return axios
     .get(`${base}/${url}`, {
       params: params
