@@ -15,12 +15,11 @@
         <span class="nickname">{{ "请登录" }}</span>
       </section>
       <section class="search-wrap">
-        <el-input clearable v-model="searchKeyword" /><el-button type="primary"
-          >搜索</el-button
-        >
+        <el-input clearable v-model="searchKeyword" />
+        <el-button type="primary" @click="gotoSearch">搜索</el-button>
       </section>
     </header>
-    <section class="main-wrap">
+    <section class="center-wrap">
       <nav>
         <ul>
           <li><router-link to="/">首页</router-link></li>
@@ -55,6 +54,12 @@ class App extends Vue {
   @userModule.Getter("accountInfo") private accountInfo: unknown;
 
   private searchKeyword = "";
+  private gotoSearch(): void{
+    if(!this.searchKeyword.trim()){
+      return
+    }
+    this.$router.push(`/search/${this.searchKeyword}`)
+  }
 }
 
 export default App;
@@ -92,7 +97,7 @@ export default App;
       display: flex;
     }
   }
-  section.main-wrap {
+  section.center-wrap {
     display: flex;
     flex: 1;
     max-height: calc(100% - 164px);

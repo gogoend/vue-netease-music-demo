@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="user-page">
-    <conten-wrap>
+    <content-wrap>
       <section class="basic-info">
         <div class="avatar-part" v-if="accountInfo">
           <el-avatar
@@ -31,7 +31,7 @@
           </template>
         </div>
       </section>
-    </conten-wrap>
+    </content-wrap>
   </div>
 </template>
 <style lang="less" scoped>
@@ -42,13 +42,9 @@ import { Vue, Component } from "vue-property-decorator";
 
 import { namespace } from "vuex-class";
 
-import ContenWrap from "@/components/ContentWrap/index.vue";
-
 const userModule = namespace("user");
 
-@Component({
-  components: { ContenWrap },
-})
+@Component
 class User extends Vue {
   @userModule.Getter("accountInfo") private accountInfo: unknown;
   @userModule.Action("updateAccountInfo") private updateAccountInfo: unknown;

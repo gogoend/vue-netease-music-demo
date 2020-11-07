@@ -8,7 +8,15 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 
+import ContentWrap from '@/components/ContentWrap/index.vue'
+import MainWrap from '@/components/MainWrap/index.vue'
+
+Vue.component('ContentWrap', ContentWrap)
+Vue.component('MainWrap', MainWrap)
+
 Vue.config.productionTip = false
+
+
 
 Vue.use(ElementUI)
 
