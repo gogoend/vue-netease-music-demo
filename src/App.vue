@@ -2,9 +2,17 @@
   <div id="app" class="app-wrap">
     <header>
       <h1>Application</h1>
-      <section class="user-profile" v-if="accountInfo">
-        <img class="avatar" :src="accountInfo.profile.avatarUrl" />
-        <span>{{accountInfo.profile.nickname}}</span>
+      <section
+        class="user-profile"
+        v-if="accountInfo"
+        @click="$router.push('/user')"
+      >
+        <el-avatar size="medium" :src="accountInfo.profile.avatarUrl" />
+        <span class="nickname">{{ accountInfo.profile.nickname }}</span>
+      </section>
+      <section class="user-profile" v-else @click="$router.push('/auth/login')">
+        <el-avatar size="medium" />
+        <span class="nickname">{{ "请登录" }}</span>
       </section>
       <section class="search-wrap">
         <el-input clearable v-model="searchKeyword" /><el-button type="primary"
@@ -16,11 +24,13 @@
       <nav>
         <ul>
           <li><router-link to="/">首页</router-link></li>
-          <li><router-link to="/User">用户</router-link></li>
+          <li><router-link to="/user">我的</router-link></li>
         </ul>
       </nav>
       <main>
-        <router-view class="main-view" />
+        <main-wrap>
+          <router-view />
+        </main-wrap>
       </main>
     </section>
     <footer></footer>
@@ -30,11 +40,17 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 
+import MainWrap from "@/components/MainWrap/index.vue";
+
 import { namespace } from "vuex-class";
 
 const userModule = namespace("user");
 
-@Component
+@Component({
+  components: {
+    MainWrap,
+  },
+})
 class App extends Vue {
   @userModule.Getter("accountInfo") private accountInfo: unknown;
 
@@ -64,9 +80,12 @@ export default App;
     align-items: center;
     flex: 0 0 @header-height;
     background-color: #07f9b1;
-    .user-profile{
-      .avatar{
-        height: 48px;
+    .user-profile {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      .nickname {
+        margin-left: 1em;
       }
     }
     .search-wrap {
@@ -81,17 +100,23 @@ export default App;
       flex: 0 0 200px;
       overflow-y: auto;
       border-right: 1px solid #828282;
+      a {
+        display: inline-block;
+        width: 100%;
+        padding: 1em 2em 1em;
+        &:hover {
+          background-color: #ddd;
+        }
+      }
     }
     main {
       flex: 1;
       overflow-y: auto;
-      .main-view {
-        height: 100%;
-      }
     }
   }
   footer {
     flex: 0 0 @footer-height;
+    background-color: #2c3e50;
   }
 }
 </style>

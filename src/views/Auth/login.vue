@@ -61,7 +61,7 @@ class LoginPage extends Vue {
       console.log(this.accountInfo);
 
       if(res.code===200){
-        this.$router.replace('/User')
+        this.$router.go(-1)
       }
     } catch(err) {
       console.log(err)
