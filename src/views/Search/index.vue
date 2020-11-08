@@ -27,6 +27,7 @@ import { search } from "@/api/search";
 import { getSongFileInfo, downloadSongByUrl } from "@/api/song";
 import { timeToString } from "@/utils/formatter";
 import { Song, Artist, PlayingNow } from "@/types/song";
+import { downloadBlob } from "@/utils/blob";
 
 import { namespace } from "vuex-class";
 const playerModule = namespace("player");
@@ -113,7 +114,12 @@ class Search extends Vue {
   private async handleDownload(row: Song) {
     const url: string = await this.getSongUrl(row.id);
     const { data } = await downloadSongByUrl(url);
-    console.log(data);
+
+    const allArtistsName = row.artists.map((item) => item.name).join("_");
+    downloadBlob(
+      data,
+      `${row.name.trim()}${allArtistsName ? " - " + allArtistsName : ""}`
+    );
   }
   private async getSearchResult() {
     this.list = [];
