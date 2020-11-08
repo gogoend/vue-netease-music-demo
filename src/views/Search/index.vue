@@ -5,7 +5,12 @@
       >相关的搜索结果共有 {{ count === null ? "..." : count }} 条
     </section>
     <section>
-      <el-table :data="list" style="width: 100%" @row-click="handleRowClick">
+      <el-table
+        :data="list"
+        style="width: 100%; user-select: none"
+        @row-click="handleRowClick"
+        stripe
+      >
         <el-table-column
           v-for="item in tableFields"
           :key="item.prop"
@@ -19,48 +24,64 @@
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator";
 import { search } from "@/api/search";
-import { getSongFileUrl } from "@/api/song";
+import { getSongFileInfo, downloadSongByUrl } from "@/api/song";
 import { timeToString } from "@/utils/formatter";
 import { Song, Artist, PlayingNow } from "@/types/song";
 
 import { namespace } from "vuex-class";
 const playerModule = namespace("player");
 
-const tableFields = [
-  {
-    prop: "name",
-    label: "音乐标题",
-  },
-  {
-    prop: "artists",
-    label: "歌手",
-    formatter(row: Song) {
-      const allArtists = row.artists.map((item: Artist) => item.name);
-
-      return allArtists.join(" / ");
-    },
-  },
-  {
-    prop: "albums",
-    label: "专辑",
-    formatter(row: Song) {
-      return row.album.name;
-    },
-  },
-  {
-    prop: "duration",
-    label: "时长",
-    formatter(row: Song) {
-      return timeToString(row.duration, "ms");
-    },
-  },
-];
-
 @Component
 class Search extends Vue {
   private list = [];
   private count = null;
-  private tableFields = tableFields;
+  private tableFields = [
+    {
+      prop: "name",
+      label: "音乐标题",
+    },
+    {
+      prop: "artists",
+      label: "歌手",
+      formatter(row: Song) {
+        const allArtists = row.artists.map((item: Artist) => item.name);
+
+        return allArtists.join(" / ");
+      },
+    },
+    {
+      prop: "albums",
+      label: "专辑",
+      formatter(row: Song) {
+        return row.album.name;
+      },
+    },
+    {
+      prop: "duration",
+      label: "时长",
+      formatter(row: Song) {
+        return timeToString(row.duration, "ms");
+      },
+    },
+    {
+      label: "下载",
+      formatter: (row: Song) => {
+        const h = this.$createElement;
+        return h(
+          "el-button",
+          {
+            on: {
+              click: (ev: MouseEvent) => {
+                ev.stopPropagation();
+                this.handleDownload(row);
+              },
+            },
+          },
+          "下载"
+        );
+      },
+    },
+  ];
 
   @playerModule.Getter("playingNow")
   private playingNow!: PlayingNow | null;
@@ -74,7 +95,7 @@ class Search extends Vue {
   private async handleRowClick(row: Song) {
     // console.log(row, column, ev);
     const clickedSong = row;
-    const {data:songFileInfo} = await getSongFileUrl({
+    const { data: songFileInfo } = await getSongFileInfo({
       id: clickedSong.id,
     });
 
@@ -82,6 +103,17 @@ class Search extends Vue {
       info: clickedSong,
       file: songFileInfo.data[0],
     });
+  }
+  private async getSongUrl(id: number) {
+    const { data: songFileInfo } = await getSongFileInfo({
+      id,
+    });
+    return songFileInfo.data[0].url;
+  }
+  private async handleDownload(row: Song) {
+    const url: string = await this.getSongUrl(row.id);
+    const { data } = await downloadSongByUrl(url);
+    console.log(data);
   }
   private async getSearchResult() {
     this.list = [];

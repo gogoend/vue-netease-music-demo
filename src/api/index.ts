@@ -1,12 +1,15 @@
-import axios from 'axios'
+import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
-axios.defaults.timeout = 1500000
+export const baseURL = process.env.ENV_CONFIG === 'prod' ? '' : '/api'
 
-
-export const base = process.env.ENV_CONFIG === 'prod' ? '' : '/api'
+const axios = Axios.create({
+  timeout: 20000,
+  headers: {},
+  baseURL
+})
 
 axios.interceptors.request.use(
-  config => {
+  (config: AxiosRequestConfig) => {
     const token = 0
     if (token) {
       config.headers['X-Access-Token'] = token
@@ -20,7 +23,7 @@ axios.interceptors.request.use(
 )
 
 axios.interceptors.response.use(
-  response => {
+  (response: AxiosResponse) => {
     if (response.status !== 200) {
       console.error('请求失败')
     }
@@ -35,20 +38,32 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-export const POST = (url: string, params: unknown) => {
-  return axios.post(`${base}/${url}`, params).then(res =>
-    res
-  )
+
+export const POST = (url: string, params?: unknown, config?: object) => {
+  return axios.post(`${url}`, params, {
+    ...config
+  })
 }
 
-export const PUT = (url: string, params: unknown) => {
-  return axios.put(`${base}/${url}`, params).then(res => res)
+export const PUT = (url: string, params?: unknown, config?: object) => {
+  return axios.put(`${url}`, params, {
+    ...config
+  })
 }
 
-export const GET = (url: string, params: unknown) => {
-  return axios
-    .get(`${base}/${url}`, {
-      params: params
-    })
-    .then(res => res)
+export const GET = (url: string, params?: unknown, config?: object) => axios
+  .get(`${url}`, {
+    params,
+    ...config
+  })
+
+export const Download = (url: string, params?: unknown, config?: object) => {
+  const opts: object = {
+    method: 'get',
+    url: `${url}`,
+    params,
+    ...config,
+    responseType: 'blob'
+  }
+  return axios(opts)
 }
