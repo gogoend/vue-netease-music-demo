@@ -6,17 +6,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { search } from "@/api/search";
 
 @Component
 class Home extends Vue {
-  private list = []
-  private async created() {
-    const res = await search({
-      keywords: "海阔天空",
-    });
-    console.log(res)
-  }
+
 }
 export default Home;
 </script>

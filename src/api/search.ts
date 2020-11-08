@@ -1,5 +1,5 @@
 import { GET } from './index'
 
-import { SearchParams } from '../types/search'
+import { API } from '../types/search'
 
-export const search = (params: SearchParams) => GET('search', params)
+export const search = (params: API.SearchParams) => GET('search', params)

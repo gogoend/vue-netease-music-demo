@@ -1,3 +1,5 @@
-export interface SearchParams {
-    keywords: string;
+export namespace API {
+    interface SearchParams {
+        keywords: string;
+    }
 }
