@@ -1,34 +1,45 @@
 <template>
   <section class="music-player">
-    <audio class="audio">
-      <source />
-    </audio>
+    <audio
+      controls
+      ref="musicPlayer"
+      class="audio"
+      :src="playingNow && playingNow.file ? playingNow.file.url : ''"
+    ></audio>
   </section>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Ref, Vue, Watch } from "vue-property-decorator";
 
-import {Song} from '@/types/song'
+import { PlayingNow } from "@/types/song";
 
 import { namespace } from "vuex-class";
 const playerModule = namespace("player");
 
 @Component
 export default class MusicPlayer extends Vue {
-  @playerModule.Getter("playingNow") private playingNow!: {
-    info: Song;
-    url: string;
-  } | null;
-  @playerModule.Mutation('updatePlayingNow') private updatePlayingNow!: {
-    info: Song;
-    url: string;
-  } | null;
+  @playerModule.Getter("playingNow")
+  private playingNow!: PlayingNow | null;
+
+  @playerModule.Action("updatePlayingNow")
+  private updatePlayingNow!: (payload: PlayingNow) => void;
+
+  @Ref() readonly musicPlayer!: HTMLAudioElement;
+
+  @Watch("playingNow.file.url", {
+    immediate: false,
+  })
+  private handleSongUrlChange() {
+    this.$nextTick(() => {
+      this.musicPlayer.play();
+    });
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .audio {
-  display: none;
+//   display: none;
 }
 </style>

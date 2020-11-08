@@ -19,10 +19,12 @@
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator";
 import { search } from "@/api/search";
-import { timeToString } from '@/utils/formatter';
-import { Song, Artist } from "@/types/song";
+import { getSongFileUrl } from "@/api/song";
+import { timeToString } from "@/utils/formatter";
+import { Song, Artist, PlayingNow } from "@/types/song";
 
-// import { namespace } from "vuex-class";
+import { namespace } from "vuex-class";
+const playerModule = namespace("player");
 
 const tableFields = [
   {
@@ -42,14 +44,14 @@ const tableFields = [
     prop: "albums",
     label: "专辑",
     formatter(row: Song) {
-      return row.album.name
+      return row.album.name;
     },
   },
   {
     prop: "duration",
     label: "时长",
     formatter(row: Song) {
-      return timeToString(row.duration,'ms')
+      return timeToString(row.duration, "ms");
     },
   },
 ];
@@ -59,11 +61,27 @@ class Search extends Vue {
   private list = [];
   private count = null;
   private tableFields = tableFields;
+
+  @playerModule.Getter("playingNow")
+  private playingNow!: PlayingNow | null;
+
+  @playerModule.Action("updatePlayingNow")
+  private updatePlayingNow!: (payload: PlayingNow) => void;
+
   private async created() {
     this.getSearchResult();
   }
-  private handleRowClick(row: Song, column: unknown, ev: MouseEvent) {
-    console.log(row,column,ev)
+  private async handleRowClick(row: Song) {
+    // console.log(row, column, ev);
+    const clickedSong = row;
+    const {data:songFileInfo} = await getSongFileUrl({
+      id: clickedSong.id,
+    });
+
+    this.updatePlayingNow({
+      info: clickedSong,
+      file: songFileInfo.data[0],
+    });
   }
   private async getSearchResult() {
     this.list = [];

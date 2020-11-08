@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex, { Commit, Dispatch } from 'vuex'
-import createPersistedState from 'vuex-persistedstate'
+// import createPersistedState from 'vuex-persistedstate'
 
 export interface ActionContextBasic {
     commit: Commit;
@@ -8,6 +8,7 @@ export interface ActionContextBasic {
 }
 
 import user from './user'
+import player from './player'
 
 Vue.use(Vuex)
 
@@ -19,11 +20,11 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    user
+    user,player
   },
   plugins: [
-    createPersistedState({
-      storage: window.sessionStorage, overwrite: true
-    })
+    // createPersistedState({
+    //   storage: window.sessionStorage, overwrite: true
+    // })
   ]
 })

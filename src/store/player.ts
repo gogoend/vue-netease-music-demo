@@ -1,23 +1,23 @@
 import { ActionContextBasic } from './index'
-import { Song } from "@/types/song";
+import { Song,SongFile, PlayingNow } from "@/types/song";
 
 interface State {
     playingInfo: Song | null;
-    playingUrl: string;
+    playingFile: SongFile | null;
     playlist: Song[];
 
 }
 
 const state: State = {
     playingInfo: null,
-    playingUrl: '',
+    playingFile: null,
     playlist: []
 }
 
 const getters = {
-    playingNow: (state: State) => ({
+    playingNow: (state: State): PlayingNow => ({
         info: state.playingInfo,
-        url: state.playingUrl
+        file: state.playingFile
     })
 }
 
@@ -26,25 +26,19 @@ export default {
     state,
     getters,
     mutations: {
-        UPDATE_PLAYING_NOW(state: State, val: {
-            info: Song;
-            url: string;
-        } | null) {
+        UPDATE_PLAYING_NOW(state: State, val: PlayingNow | null) {
             if (!val) {
                 state.playingInfo = null
-                state.playingUrl = ''
+                state.playingFile = null
             } else {
                 state.playingInfo = val.info
-                state.playingUrl = val.url
+                state.playingFile = val.file
             }
         }
     },
     actions: {
-        updatePlayingNow(context: ActionContextBasic, payload: {
-            info: Song;
-            url: string;
-        } | null = null): void {
-            context.commit('UPDATE_ACCOUNT_INFO', payload)
+        updatePlayingNow(context: ActionContextBasic, payload: PlayingNow | null = null): void {
+            context.commit('UPDATE_PLAYING_NOW', payload)
         }
     },
     modules: {

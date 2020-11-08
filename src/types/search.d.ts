@@ -1,5 +1,5 @@
 export namespace API {
-    interface SearchParams {
+    interface SearchP {
         keywords: string;
     }
 }
