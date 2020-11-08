@@ -32,14 +32,16 @@
         </main-wrap>
       </main>
     </section>
-    <footer></footer>
+    <footer>
+      <music-player />
+    </footer>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 
-import MainWrap from "@/components/MainWrap/index.vue";
+import MusicPlayer from "@/components/MusicPlayer/index.vue";
 
 import { namespace } from "vuex-class";
 
@@ -47,7 +49,7 @@ const userModule = namespace("user");
 
 @Component({
   components: {
-    MainWrap,
+    MusicPlayer
   },
 })
 class App extends Vue {

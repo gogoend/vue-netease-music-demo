@@ -33,7 +33,6 @@ const tableFields = [
     prop: "artists",
     label: "歌手",
     formatter(row: Song) {
-    //   console.log(row, column, cellVal, index, "歌手");
       const allArtists = row.artists.map((item: Artist) => item.name);
 
       return allArtists.join(" / ");
@@ -43,7 +42,6 @@ const tableFields = [
     prop: "albums",
     label: "专辑",
     formatter(row: Song) {
-    //   console.log(row, column, cellVal, index, "专辑");
       return row.album.name
     },
   },
@@ -51,7 +49,6 @@ const tableFields = [
     prop: "duration",
     label: "时长",
     formatter(row: Song) {
-    //   console.log(row, column, cellVal, index, "时长");
       return timeToString(row.duration,'ms')
     },
   },
