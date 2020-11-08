@@ -34,8 +34,9 @@ const playerModule = namespace("player");
 
 @Component
 class Search extends Vue {
-  private list = [];
-  private count = null;
+  private list: Song[] = [];
+  private count: number | null = null;
+  private downloadProgress = 0;
   private tableFields = [
     {
       prop: "name",
@@ -113,7 +114,7 @@ class Search extends Vue {
   }
   private async handleDownload(row: Song) {
     const url: string = await this.getSongUrl(row.id);
-    const { data } = await downloadSongByUrl(url);
+    const { data } = await downloadSongByUrl(url, this);
 
     const allArtistsName = row.artists.map((item) => item.name).join("_");
     downloadBlob(
@@ -136,9 +137,7 @@ class Search extends Vue {
   @Watch("$route.params.kw", {
     immediate: false,
   })
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private routerChange(nVal: unknown, oVal: unknown): void {
-    // void (nVal, oVal);
+  private routerChange(): void {
     this.getSearchResult();
   }
 }
