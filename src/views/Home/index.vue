@@ -7,9 +7,14 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
+import { getHomeData } from "@/api/home";
+
 @Component
 class Home extends Vue {
-
+  private async created() {
+    const { data } = await getHomeData();
+    console.log(data);
+  }
 }
 export default Home;
 </script>

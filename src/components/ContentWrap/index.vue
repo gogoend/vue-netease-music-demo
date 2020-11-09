@@ -27,8 +27,8 @@ export default class ContentWrap extends Vue {
   margin: auto;
   max-width: 720px;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+  // display: flex;
+  // flex-direction: column;
   // align-items: center;
 }
 </style>

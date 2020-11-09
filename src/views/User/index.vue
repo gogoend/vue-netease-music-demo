@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="user-page">
-    <content-wrap>
+    <content-wrap class="section-wrap">
       <section class="basic-info">
         <div class="avatar-part" v-if="accountInfo">
           <el-avatar
@@ -30,6 +30,9 @@
             <el-button @click="updateAccountInfo(null)">退出登录</el-button>
           </template>
         </div>
+      </section>
+      <section class="my-playlist" v-if="accountInfo">
+        <h2>我的歌单</h2>
       </section>
     </content-wrap>
   </div>
@@ -54,21 +57,27 @@ export default User;
 </script>
 
 <style lang="less" scoped>
-.basic-info {
-  margin: 0 auto;
-  width: 100%;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 32px;
-  background-image: linear-gradient(45deg, #70d080, #a0f912);
-  border-radius: 16px;
-  .avatar-part {
-    display: flex;
-    align-items: center;
-    .nickname {
-      margin-left: 1em;
+.user-page {
+  .section-wrap{
+    >section {
+      margin: 1.5em auto;
+      width: 100%;
+    }
+    .basic-info {
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px;
+      background-image: linear-gradient(45deg, #70d080, #a0f912);
+      border-radius: 16px;
+      .avatar-part {
+        display: flex;
+        align-items: center;
+        .nickname {
+          margin-left: 1em;
+        }
+      }
     }
   }
 }
