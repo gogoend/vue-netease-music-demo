@@ -16,8 +16,6 @@ Vue.component('MainWrap', MainWrap)
 
 Vue.config.productionTip = false
 
-
-
 Vue.use(ElementUI)
 
 new Vue({

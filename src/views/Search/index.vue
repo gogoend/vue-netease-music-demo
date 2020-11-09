@@ -112,9 +112,16 @@ class Search extends Vue {
     });
     return songFileInfo.data[0].url;
   }
+  private handlsDownloadProgress(ev: ProgressEvent) {
+    console.log(ev);
+    // this.$message({
+    //   type: "info",
+    //   message: `正在下载：${((ev.loaded / ev.total) * 100).toFixed(1)}%`,
+    // });
+  }
   private async handleDownload(row: Song) {
     const url: string = await this.getSongUrl(row.id);
-    const { data } = await downloadSongByUrl(url, this);
+    const { data } = await downloadSongByUrl(url, this.handlsDownloadProgress);
 
     const allArtistsName = row.artists.map((item) => item.name).join("_");
     downloadBlob(
