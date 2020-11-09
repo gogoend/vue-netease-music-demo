@@ -84,6 +84,9 @@ class Search extends Vue {
       },
     },
   ];
+  
+  // 用于存储下载弹框
+  private downloadingMsg = {};
 
   @playerModule.Getter("playingNow")
   private playingNow!: PlayingNow | null;
@@ -112,16 +115,29 @@ class Search extends Vue {
     });
     return songFileInfo.data[0].url;
   }
-  private handlsDownloadProgress(ev: ProgressEvent) {
-    console.log(ev);
-    // this.$message({
-    //   type: "info",
-    //   message: `正在下载：${((ev.loaded / ev.total) * 100).toFixed(1)}%`,
-    // });
+  private handlsDownloadProgress(ev: ProgressEvent, id: number) {
+    const msgComponent = this.downloadingMsg[id + ""];
+    const message = `正在下载：${((ev.loaded / ev.total) * 100).toFixed(1)}%`;
+
+    if (msgComponent) {
+      msgComponent.message = message;
+      if ((ev.loaded / ev.total) * 100 === 100) {
+        msgComponent.close();
+        this.downloadingMsg[id + ""] = null;
+      }
+    } else {
+      this.downloadingMsg[id + ""] = this.$message({
+        type: "info",
+        message,
+        duration: 0,
+      });
+    }
   }
   private async handleDownload(row: Song) {
     const url: string = await this.getSongUrl(row.id);
-    const { data } = await downloadSongByUrl(url, this.handlsDownloadProgress);
+    const { data } = await downloadSongByUrl(url, (ev: ProgressEvent) =>
+      this.handlsDownloadProgress(ev, row.id)
+    );
 
     const allArtistsName = row.artists.map((item) => item.name).join("_");
     downloadBlob(
