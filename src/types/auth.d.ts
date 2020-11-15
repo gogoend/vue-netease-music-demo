@@ -1,3 +1,5 @@
+export type AuthDialogType = 'login'|'reg'|'forget'
+
 export interface LoginParams {
     password: string;
     md5_password?: string;

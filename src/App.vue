@@ -5,7 +5,7 @@
       <section
         class="user-profile"
         v-if="accountInfo"
-        @click="$router.push('/user')"
+        @click="showAuthDialog(true)"
       >
         <el-avatar size="medium" :src="accountInfo.profile.avatarUrl" />
         <span class="nickname">{{ accountInfo.profile.nickname }}</span>
@@ -18,6 +18,7 @@
         <el-input clearable v-model="searchKeyword" />
         <el-button type="primary" @click="gotoSearch">搜索</el-button>
       </section>
+      <auth-dialog :visible="authDialogVisible"></auth-dialog>
     </header>
     <section class="center-wrap">
       <nav>
@@ -44,16 +45,28 @@ import { Vue, Component } from "vue-property-decorator";
 import MusicPlayer from "@/components/MusicPlayer/index.vue";
 
 import { namespace } from "vuex-class";
+import { AuthDialogType } from '@/types/auth'
+
+import AuthDialog from "@/components/AuthDialog/index.vue"
 
 const userModule = namespace("user");
+const authModule = namespace("auth");
+
+debugger
 
 @Component({
   components: {
-    MusicPlayer
+    MusicPlayer,
+    AuthDialog
   },
 })
 class App extends Vue {
   @userModule.Getter("accountInfo") private accountInfo: unknown;
+
+  @authModule.Getter('authDialogType') private authDialogType!: AuthDialogType;
+  @authModule.Getter('authDialogVisible') private authDialogVisible!: boolean;
+  @authModule.Action('changeAuthDialogType') private changeAuthDialogType!: (payload: AuthDialogType) => void;
+  @authModule.Action('showAuthDialog') private showAuthDialog!: (payload: boolean) => void;
 
   private searchKeyword = "";
   private gotoSearch(): void{

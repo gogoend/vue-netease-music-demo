@@ -1,14 +1,10 @@
 import Vue from 'vue'
-import Vuex, { Commit, Dispatch } from 'vuex'
+import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
-
-export interface ActionContextBasic {
-    commit: Commit;
-    dispatch: Dispatch;
-}
 
 import user from './user'
 import player from './player'
+import auth from './auth'
 
 Vue.use(Vuex)
 
@@ -20,7 +16,9 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    user,player
+    user,
+    player,
+    auth
   },
   plugins: [
     createPersistedState({

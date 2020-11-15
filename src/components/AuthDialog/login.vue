@@ -29,7 +29,7 @@ import md5 from "js-md5";
 
 import { Form as ElForm } from "element-ui";
 
-import { /*PhoneLoginParams*/ EmailLoginParams } from "@/types/login";
+import { /*PhoneLoginParams*/ EmailLoginParams } from "@/types/auth";
 
 const userModule = namespace("user");
 
