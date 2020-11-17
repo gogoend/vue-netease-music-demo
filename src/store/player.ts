@@ -1,4 +1,4 @@
-import { ActionContextBasic } from './index'
+import { ActionContextBasic } from '@/types/ActionContextBasic.d.ts'
 import { Song,SongFile, PlayingNow } from "@/types/song";
 
 interface State {
@@ -21,21 +21,23 @@ const getters = {
     })
 }
 
+const mutations = {
+    UPDATE_PLAYING_NOW(state: State, val: PlayingNow | null) {
+        if (!val) {
+            state.playingInfo = null
+            state.playingFile = null
+        } else {
+            state.playingInfo = val.info
+            state.playingFile = val.file
+        }
+    }
+}
+
 export default {
     namespaced: true,
     state,
     getters,
-    mutations: {
-        UPDATE_PLAYING_NOW(state: State, val: PlayingNow | null) {
-            if (!val) {
-                state.playingInfo = null
-                state.playingFile = null
-            } else {
-                state.playingInfo = val.info
-                state.playingFile = val.file
-            }
-        }
-    },
+    mutations,
     actions: {
         updatePlayingNow(context: ActionContextBasic, payload: PlayingNow | null = null): void {
             context.commit('UPDATE_PLAYING_NOW', payload)

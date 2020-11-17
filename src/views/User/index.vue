@@ -24,7 +24,7 @@
         </div>
         <div class="operation">
           <template v-if="!accountInfo">
-            <el-button @click="$router.push('/auth')">去登录</el-button>
+            <el-button @click="showAuthDialog(true)">去登录</el-button>
           </template>
           <template v-else>
             <el-button @click="updateAccountInfo(null)">退出登录</el-button>
@@ -46,11 +46,15 @@ import { Vue, Component } from "vue-property-decorator";
 import { namespace } from "vuex-class";
 
 const userModule = namespace("user");
+const authModule = namespace("auth");
 
 @Component
 class User extends Vue {
   @userModule.Getter("accountInfo") private accountInfo: unknown;
   @userModule.Action("updateAccountInfo") private updateAccountInfo: unknown;
+  @authModule.Action("showAuthDialog") private showAuthDialog!: (
+    payload: boolean
+  ) => void;
 }
 
 export default User;

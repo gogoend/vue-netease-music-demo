@@ -29,9 +29,10 @@ import md5 from "js-md5";
 
 import { Form as ElForm } from "element-ui";
 
-import { /*PhoneLoginParams*/ EmailLoginParams } from "@/types/login";
+import { /*PhoneLoginParams*/ EmailLoginParams } from "@/types/auth";
 
 const userModule = namespace("user");
+const authModule = namespace("auth")
 
 @Component
 class LoginPage extends Vue {
@@ -41,6 +42,9 @@ class LoginPage extends Vue {
     payload: unknown
   ) => void;
   @userModule.Getter("accountInfo") private accountInfo: unknown;
+  @authModule.Action("showAuthDialog") private showAuthDialog!: (
+    payload: boolean
+  ) => void;
 
   // (this: AbortSignal, ev: AbortSignalEventMap[K]) => any
 
@@ -57,11 +61,10 @@ class LoginPage extends Vue {
 
     try{
       const { data: res } = await emailLogin(postData);
+      if(res.code===200){
       this.updateAccountInfo(res);
       console.log(this.accountInfo);
-
-      if(res.code===200){
-        this.$router.go(-1)
+        this.showAuthDialog(false)
       }
     } catch(err) {
       console.log(err)

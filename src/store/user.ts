@@ -1,4 +1,4 @@
-import { ActionContextBasic } from './index'
+import { ActionContextBasic } from '@/types/ActionContextBasic'
 
 interface State {
     accountInfo: object | null;
@@ -9,7 +9,9 @@ const state: State = {
 }
 
 const getters = {
-    accountInfo: (state: State) => state.accountInfo
+    accountInfo: (state: State) => {
+        return state.accountInfo
+    }
 }
 
 export default {

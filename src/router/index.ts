@@ -5,7 +5,6 @@ import NotFound from '../views/404.vue'
 
 import search from './search'
 import user from './user'
-import auth from './auth'
 
 Vue.use(VueRouter)
 
@@ -17,7 +16,6 @@ const routes: Array<RouteConfig> = [
   },
   search,
   user,
-  auth,
   {
     path: '*',
     name: '404',

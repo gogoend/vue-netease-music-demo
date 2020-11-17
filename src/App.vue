@@ -2,15 +2,11 @@
   <div id="app" class="app-wrap">
     <header>
       <h1>Application</h1>
-      <section
-        class="user-profile"
-        v-if="accountInfo"
-        @click="$router.push('/user')"
-      >
+      <section class="user-profile" v-if="accountInfo" @click="$router.push('/user')">
         <el-avatar size="medium" :src="accountInfo.profile.avatarUrl" />
         <span class="nickname">{{ accountInfo.profile.nickname }}</span>
       </section>
-      <section class="user-profile" v-else @click="$router.push('/auth/login')">
+      <section class="user-profile" v-else @click="showAuthDialog(true)">
         <el-avatar size="medium" />
         <span class="nickname">{{ "请登录" }}</span>
       </section>
@@ -18,6 +14,10 @@
         <el-input clearable v-model="searchKeyword" />
         <el-button type="primary" @click="gotoSearch">搜索</el-button>
       </section>
+      <auth-dialog
+        :visible.sync="authDialogVisible"
+        :before-close="()=>showAuthDialog(false)"
+      ></auth-dialog>
     </header>
     <section class="center-wrap">
       <nav>
@@ -44,23 +44,36 @@ import { Vue, Component } from "vue-property-decorator";
 import MusicPlayer from "@/components/MusicPlayer/index.vue";
 
 import { namespace } from "vuex-class";
+import { AuthDialogType } from "@/types/auth";
+
+import AuthDialog from "@/components/AuthDialog/index.vue";
 
 const userModule = namespace("user");
+const authModule = namespace("auth");
 
 @Component({
   components: {
-    MusicPlayer
+    MusicPlayer,
+    AuthDialog,
   },
 })
 class App extends Vue {
   @userModule.Getter("accountInfo") private accountInfo: unknown;
+  @authModule.Getter("authDialogType") private authDialogType!: AuthDialogType;
+  @authModule.Getter("authDialogVisible") private authDialogVisible!: boolean;
+  @authModule.Action("changeAuthDialogType") private changeAuthDialogType!: (
+    payload: AuthDialogType
+  ) => void;
+  @authModule.Action("showAuthDialog") private showAuthDialog!: (
+    payload: boolean
+  ) => void;
 
   private searchKeyword = "";
-  private gotoSearch(): void{
-    if(!this.searchKeyword.trim()){
-      return
+  private gotoSearch(): void {
+    if (!this.searchKeyword.trim()) {
+      return;
     }
-    this.$router.push(`/search/${this.searchKeyword}`)
+    this.$router.push(`/search/${this.searchKeyword}`);
   }
 }
 
