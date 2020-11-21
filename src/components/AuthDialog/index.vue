@@ -1,9 +1,8 @@
 <template>
-  <el-dialog v-bind="$attrs" class="auth-dialog">
-    <!-- 111 -->
-    <login />
-    <reg />
-
+  <el-dialog :destroy-on-close="true"	v-bind="$attrs" class="auth-dialog">
+    <!-- <login /> -->
+    <!-- <reg /> -->
+    <component :is="authComponent" />
   </el-dialog>
 </template>
 
@@ -25,7 +24,13 @@ const authModule = namespace('auth')
 })
 export default class Auth extends Vue {
   @authModule.State('authDialogType') private authDialogType!: AuthDialogType
-
+  private get authComponent(){
+    switch(this.authDialogType){
+      case 'login': return Login;
+      case 'reg': return Reg;
+    }
+    return Login;
+  }
 }
 </script>
 

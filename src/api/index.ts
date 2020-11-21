@@ -10,10 +10,6 @@ const axios = Axios.create({
 
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-    const token = 0
-    if (token) {
-      config.headers['X-Access-Token'] = token
-    }
     return config
   },
   error => {

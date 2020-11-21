@@ -24,7 +24,7 @@
         </div>
         <div class="operation">
           <template v-if="!accountInfo">
-            <el-button @click="showAuthDialog(true)">去登录</el-button>
+            <el-button @click="changeAuthDialogType('login');showAuthDialog(true)">去登录</el-button>
           </template>
           <template v-else>
             <el-button @click="updateAccountInfo(null)">退出登录</el-button>
@@ -32,29 +32,66 @@
         </div>
       </section>
       <section class="my-playlist" v-if="accountInfo">
-        <h2>我的歌单</h2>
+        <h2>我创建的歌单</h2>
+        <ul>
+          <li v-for="pl in userPlaylist" :key="pl.id" @click="$router.push(`/playlist/${pl.id}`)">
+            <pl-item :name="pl.name" :coverImgSrc="pl.coverImgUrl" />
+          </li>
+        </ul>
       </section>
     </content-wrap>
   </div>
 </template>
-<style lang="less" scoped>
-</style>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
+import { getSubcount, getPlaylist } from "@/api/user.ts";
+import PlItem from "@/components/PlItem/index.vue"
 
 import { namespace } from "vuex-class";
+
+import { AuthDialogType } from "@/types/auth";
 
 const userModule = namespace("user");
 const authModule = namespace("auth");
 
-@Component
+@Component({
+  components: {
+    PlItem
+  }
+})
 class User extends Vue {
   @userModule.Getter("accountInfo") private accountInfo: unknown;
   @userModule.Action("updateAccountInfo") private updateAccountInfo: unknown;
   @authModule.Action("showAuthDialog") private showAuthDialog!: (
     payload: boolean
   ) => void;
+  @authModule.Action("changeAuthDialogType") private changeAuthDialogType!: (
+    payload: AuthDialogType
+  ) => void;
+
+  private userPlaylist = []
+
+  private async created () {
+    if (this.accountInfo) {
+      // const playlists = await getPlaylist({
+      //   uid: this.accountInfo.account.id
+      // })
+
+      /**
+       * code
+       * more
+       * playlist
+       */
+      const [{data:stat}, {data:{playlist:playlist}}] = await Promise.all([
+        getSubcount(), getPlaylist({
+          uid: this.accountInfo.account.id
+        })
+      ])
+      console.log(stat, playlist)
+      this.userPlaylist = playlist
+    }
+  }
 }
 
 export default User;
@@ -62,8 +99,8 @@ export default User;
 
 <style lang="less" scoped>
 .user-page {
-  .section-wrap{
-    >section {
+  .section-wrap {
+    > section {
       margin: 1.5em auto;
       width: 100%;
     }
@@ -81,6 +118,12 @@ export default User;
         .nickname {
           margin-left: 1em;
         }
+      }
+    }
+    .my-playlist {
+      .pl-item {
+        cursor: pointer;
+        display: inline-block;
       }
     }
   }

@@ -17,15 +17,28 @@
           <input autocomplete="off" type="password" name />
         </label>
       </fieldset>
-      <router-link to="/auth" replace>去登录</router-link>
+      <el-link @click="changeAuthDialogType('login')">去登录</el-link>
       <button @click="$router.go(-1)" type="button">返回</button>
       <button type="submit">提交</button>
     </form>
   </div>
 </template>
 
-<script>
-export default {};
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+
+import { namespace } from "vuex-class";
+import { AuthDialogType } from "@/types/auth";
+
+
+const authModule = namespace("auth");
+
+@Component
+export default class Reg extends Vue{
+    @authModule.Action("changeAuthDialogType") private changeAuthDialogType!: (
+    payload: AuthDialogType
+  ) => void;
+}
 </script>
 
 <style>
