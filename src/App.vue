@@ -11,8 +11,9 @@
         <span class="nickname">{{ "请登录" }}</span>
       </section>
       <section class="search-wrap">
-        <el-input clearable v-model="searchKeyword" />
-        <el-button type="primary" @click="gotoSearch">搜索</el-button>
+        <form @submit.prevent="gotoSearch">
+          <el-input clearable v-model="searchKeyword" />
+        </form>
       </section>
       <auth-dialog
         :visible.sync="authDialogVisible"
