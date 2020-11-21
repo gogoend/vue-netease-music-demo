@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home-page">
     <h1>这里是首页</h1>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default Home;
 </script>
 
 <style lang="less" scoped>
-.home {
+.home-page {
   background-color: aquamarine;
 }
 </style>

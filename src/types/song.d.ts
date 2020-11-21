@@ -2,19 +2,19 @@ type SongFormat = 'aac' | 'm4a' | 'wma' | 'flac' | 'mp3'
 
 export interface Song {
     album: Album;
-    alias: string[];
+    alias?: string[];
     artists: Artist[];
-    copyrightId: number;
+    copyrightId?: number;
     duration: number;
-    fee: number;
-    ftype: number;
+    fee?: number;
+    ftype?: number;
     id: number;
-    mark: number;
-    mvid: number;
+    mark?: number;
+    mvid?: number;
     name: string;
-    rUrl: string | null;
-    rtype: number;
-    status: number;
+    rUrl?: string | null;
+    rtype?: number;
+    status?: number;
 }
 
 export interface Album {

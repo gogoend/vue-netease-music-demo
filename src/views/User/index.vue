@@ -34,7 +34,7 @@
       <section class="my-playlist" v-if="accountInfo">
         <h2>我创建的歌单</h2>
         <ul>
-          <li v-for="pl in userPlaylist" :key="pl.id">
+          <li v-for="pl in userPlaylist" :key="pl.id" @click="$router.push(`/playlist/${pl.id}`)">
             <pl-item :name="pl.name" :coverImgSrc="pl.coverImgUrl" />
           </li>
         </ul>
@@ -42,8 +42,6 @@
     </content-wrap>
   </div>
 </template>
-<style lang="less" scoped>
-</style>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
@@ -120,6 +118,12 @@ export default User;
         .nickname {
           margin-left: 1em;
         }
+      }
+    }
+    .my-playlist {
+      .pl-item {
+        cursor: pointer;
+        display: inline-block;
       }
     }
   }

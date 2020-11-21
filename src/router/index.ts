@@ -5,6 +5,7 @@ import NotFound from '../views/404.vue'
 
 import search from './search'
 import user from './user'
+import playlist from './playlist'
 
 Vue.use(VueRouter)
 
@@ -16,6 +17,7 @@ const routes: Array<RouteConfig> = [
   },
   search,
   user,
+  playlist,
   {
     path: '*',
     name: '404',
