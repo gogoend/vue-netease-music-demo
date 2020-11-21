@@ -13,7 +13,7 @@
         ></el-input>
       </el-form-item>
       <section class="bottom-btns">
-        <router-link to="/auth/reg" replace>去注册</router-link>
+        <el-link @click="changeAuthDialogType('reg')">去注册</el-link>
         <el-button type="primary" @click="handleSubmit">提交</el-button>
       </section>
     </el-form>
@@ -24,6 +24,7 @@
 import { Component, Ref, Vue } from "vue-property-decorator";
 import { namespace } from "vuex-class";
 import { emailLogin } from "@/api/login";
+import { AuthDialogType } from "@/types/auth";
 
 import md5 from "js-md5";
 
@@ -38,6 +39,9 @@ const authModule = namespace("auth")
 class LoginPage extends Vue {
   @Ref() readonly loginForm!: ElForm;
 
+  @authModule.Action("changeAuthDialogType") private changeAuthDialogType!: (
+    payload: AuthDialogType
+  ) => void;
   @userModule.Action("updateAccountInfo") private updateAccountInfo!: (
     payload: unknown
   ) => void;

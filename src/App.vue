@@ -6,7 +6,7 @@
         <el-avatar size="medium" :src="accountInfo.profile.avatarUrl" />
         <span class="nickname">{{ accountInfo.profile.nickname }}</span>
       </section>
-      <section class="user-profile" v-else @click="showAuthDialog(true)">
+      <section class="user-profile" v-else @click="showAuthDialog(true);changeAuthDialogType('login')">
         <el-avatar size="medium" />
         <span class="nickname">{{ "请登录" }}</span>
       </section>
