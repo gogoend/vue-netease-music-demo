@@ -1,7 +1,12 @@
 type TimeUnit = 's' | 'ms'
+import { Artist } from "@/types/song";
 
 export const numberWithLeadZero = function (val: number | string): string {
     return val >= 10 ? String(val) : `0${val}`
+}
+
+export const formatArtists = function (artists: Artist[]): string {
+    return artists.map((item: Artist) => item.name).join(" / ");
 }
 
 export const timeToString = function (time: number | string, unit: TimeUnit = 's'): string {

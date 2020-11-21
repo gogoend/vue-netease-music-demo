@@ -76,4 +76,7 @@ export namespace API {
     interface UrlP {
         id: number
     }
+    interface PlaylistP {
+        uid: number
+    }
 }

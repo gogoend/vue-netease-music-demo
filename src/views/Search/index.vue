@@ -4,67 +4,34 @@
       与<b>{{ $route.params.kw }}</b
       >相关的搜索结果共有 {{ count === null ? "..." : count }} 条
     </section>
-    <section>
-      <el-table
-        :data="list"
-        style="width: 100%; user-select: none"
-        @row-click="handleRowClick"
-        stripe
-      >
-        <el-table-column
-          v-for="item in tableFields"
-          :key="item.prop"
-          v-bind="{ ...item }"
-        ></el-table-column>
-      </el-table>
-    </section>
+    <music-list-table
+      :data="list"
+      @row-click="handleRowClick"
+      :extraCol="tableFields"
+     />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator";
 import { search } from "@/api/search";
-import { getSongFileInfo, downloadSongByUrl } from "@/api/song";
-import { timeToString } from "@/utils/formatter";
-import { Song, Artist, PlayingNow } from "@/types/song";
+import { downloadSongByUrl } from "@/api/song";
+import { Song } from "@/types/song";
+import MusicListTable from "@/components/MusicListTable/index.vue"
 import { downloadBlob } from "@/utils/blob";
+import clickToPlayTableMixin from "@/mixin/clickToListenTableMixin.ts"
 
-import { namespace } from "vuex-class";
-const playerModule = namespace("player");
-
-@Component
+@Component({
+  components:{
+    MusicListTable
+  },
+  mixins: [ clickToPlayTableMixin ]
+})
 class Search extends Vue {
   private list: Song[] = [];
   private count: number | null = null;
   private downloadProgress = 0;
   private tableFields = [
-    {
-      prop: "name",
-      label: "音乐标题",
-    },
-    {
-      prop: "artists",
-      label: "歌手",
-      formatter(row: Song) {
-        const allArtists = row.artists.map((item: Artist) => item.name);
-
-        return allArtists.join(" / ");
-      },
-    },
-    {
-      prop: "albums",
-      label: "专辑",
-      formatter(row: Song) {
-        return row.album.name;
-      },
-    },
-    {
-      prop: "duration",
-      label: "时长",
-      formatter(row: Song) {
-        return timeToString(row.duration, "ms");
-      },
-    },
     {
       label: "下载",
       formatter: (row: Song) => {
@@ -89,34 +56,10 @@ class Search extends Vue {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private downloadingMsg: any[] = [];
 
-  @playerModule.Getter("playingNow")
-  private playingNow!: PlayingNow | null;
-
-  @playerModule.Action("updatePlayingNow")
-  private updatePlayingNow!: (payload: PlayingNow) => void;
-
   private async created() {
     this.getSearchResult();
   }
-  private async handleRowClick(row: Song) {
-    // console.log(row, column, ev);
-    const clickedSong = row;
-    const { data: songFileInfo } = await getSongFileInfo({
-      id: clickedSong.id,
-    });
-
-    this.updatePlayingNow({
-      info: clickedSong,
-      file: songFileInfo.data[0],
-    });
-  }
-  private async getSongUrl(id: number) {
-    const { data: songFileInfo } = await getSongFileInfo({
-      id,
-    });
-    return songFileInfo.data[0].url;
-  }
-  private handlsDownloadProgress(ev: ProgressEvent, id: number) {
+  private handleDownloadProgress(ev: ProgressEvent, id: number) {
     const msgComponent = this.downloadingMsg[id];
     const message = `正在下载：${((ev.loaded / ev.total) * 100).toFixed(1)}%`;
 
@@ -137,7 +80,7 @@ class Search extends Vue {
   private async handleDownload(row: Song) {
     const url: string = await this.getSongUrl(row.id);
     const { data } = await downloadSongByUrl(url, (ev: ProgressEvent) =>
-      this.handlsDownloadProgress(ev, row.id)
+      this.handleDownloadProgress(ev, row.id)
     );
 
     const allArtistsName = row.artists.map((item) => item.name).join("_");
