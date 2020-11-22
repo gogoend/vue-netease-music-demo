@@ -11,9 +11,7 @@
         <span class="nickname">{{ "请登录" }}</span>
       </section>
       <section class="search-wrap">
-        <form @submit.prevent="gotoSearch">
-          <el-input clearable v-model="searchKeyword" />
-        </form>
+        <search-box />
       </section>
       <auth-dialog
         :visible.sync="authDialogVisible"
@@ -43,6 +41,7 @@
 import { Vue, Component } from "vue-property-decorator";
 
 import MusicPlayer from "@/components/MusicPlayer/index.vue";
+import SearchBox from "@/components/SearchBox/index.vue"
 
 import { namespace } from "vuex-class";
 import { AuthDialogType } from "@/types/auth";
@@ -56,6 +55,7 @@ const authModule = namespace("auth");
   components: {
     MusicPlayer,
     AuthDialog,
+    SearchBox
   },
 })
 class App extends Vue {
@@ -68,14 +68,6 @@ class App extends Vue {
   @authModule.Action("showAuthDialog") private showAuthDialog!: (
     payload: boolean
   ) => void;
-
-  private searchKeyword = "";
-  private gotoSearch(): void {
-    if (!this.searchKeyword.trim()) {
-      return;
-    }
-    this.$router.push(`/search/${this.searchKeyword}`);
-  }
 }
 
 export default App;
@@ -110,6 +102,7 @@ export default App;
       }
     }
     .search-wrap {
+      position: relative;
       display: flex;
     }
   }
