@@ -4,9 +4,9 @@
     }">
     <el-image class="cover-img" :src="coverInfo.coverImgUrl"/>
     <section class="cover-info">
-      <div class="title">
+      <section class="title">
         <h2 class="text">{{coverInfo.name}}</h2>
-      </div>
+      </section>
       <section class="creator-info" v-if="coverInfo.creator">
         {{coverInfo.creator.nickname}} {{new Date(coverInfo.createTime).toLocaleString()}}创建
       </section>
@@ -45,7 +45,7 @@ export default class Cover extends Vue {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .cover{
   display: flex;
   .cover-img{
@@ -53,6 +53,9 @@ export default class Cover extends Vue {
   }
   .cover-info{
     margin-left: 2em;
+    &>section{
+      margin-bottom: 0.5em;
+    }
     .title{
       .text{
         display: inline;
@@ -66,6 +69,9 @@ export default class Cover extends Vue {
         margin-right: 0.5em;
       }
     }
+  }
+  .extra-info{
+    line-height: 1.5em;
   }
   &.playlist-cover .cover-info{
     .title::before{

@@ -9,7 +9,7 @@
       />
       </el-tab-pane>
       <el-tab-pane label="评论">
-        <comment-list />
+        <comment-list :commentData="playListCommentData" />
       </el-tab-pane>
       <el-tab-pane label="收藏者">
         <fans-list />
@@ -26,7 +26,7 @@ import FansList from './FansList.vue'
 import MusicListTable from '@/components/MusicListTable/index.vue'
 import clickToPlayTableMixin from "@/mixin/clickToListenTableMixin.ts"
 import { Song } from "@/types/song";
-import { getPlaylistDetail } from "@/api/playlist.ts"
+import { getPlaylistDetail, getPlaylistCommentData } from "@/api/playlist.ts"
 import { getSongDetail } from "@/api/song.ts"
 import pageType from "./pageType"
 
@@ -51,10 +51,24 @@ export default class PlayList extends Vue {
   }
   private list: Song[] = []
   private playListDetail = {}
+  private playListCommentData = {}
   private async getPlaylistInfo() {
-    const {data: playListDetail} = await getPlaylistDetail({
-      id: +this.$route.params.id
-    })
+    const [
+      {data: playListCommentData},
+      {data: playListDetail}
+    ] = await Promise.all(
+      [
+        getPlaylistCommentData({
+          id: +this.$route.params.id
+        }),
+        getPlaylistDetail({
+          id: +this.$route.params.id
+        })
+      ]
+    )
+    this.playListCommentData = playListCommentData
+    // const {data: playListComments} = await 
+    // const {data: playListDetail} = await 
     this.playListDetail = playListDetail.playlist
     const songIds = playListDetail.playlist.trackIds.map(function(item: any): object{
       return item.id
@@ -79,10 +93,10 @@ export default class PlayList extends Vue {
   private get pageType(){
     const routeName = this.$route.name
     return pageType[routeName]
-  } 
+  }
 }
 </script>
 
-<style>
+<style lang="less" scoped>
 
 </style>
