@@ -11,3 +11,7 @@ export const downloadSongByUrl = (url: string, progressCb?: Function) => Downloa
         }
     }
 })
+
+export const getSongDetail = (params: {
+    ids: string;
+}) => GET('song/detail', params)

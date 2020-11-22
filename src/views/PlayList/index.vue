@@ -1,6 +1,6 @@
 <template>
   <div class="playlist-page">
-    <cover />
+    <cover :page-type="pageType" :coverInfo="playListDetail" />
     <el-tabs>
       <el-tab-pane label="歌曲列表">
       <music-list-table
@@ -27,7 +27,8 @@ import MusicListTable from '@/components/MusicListTable/index.vue'
 import clickToPlayTableMixin from "@/mixin/clickToListenTableMixin.ts"
 import { Song } from "@/types/song";
 import { getPlaylistDetail } from "@/api/playlist.ts"
-
+import { getSongDetail } from "@/api/song.ts"
+import pageType from "./pageType"
 
 @Component({
   components:{
@@ -45,15 +46,27 @@ export default class PlayList extends Vue {
   @Watch("$route.params.id", {
     immediate: false,
   })
-  private list: Song[] = []
   private routerChange(): void {
     this.getPlaylistInfo();
   }
+  private list: Song[] = []
+  private playListDetail = {}
   private async getPlaylistInfo() {
-    const {data} = await getPlaylistDetail({
+    const {data: playListDetail} = await getPlaylistDetail({
       id: +this.$route.params.id
     })
-    this.list = data.playlist.tracks.map(function(item: any): Song{
+    this.playListDetail = playListDetail.playlist
+    const songIds = playListDetail.playlist.trackIds.map(function(item: any): object{
+      return item.id
+    }).join(',')
+    if(!songIds){
+      return
+    }
+    const {data: songData} = await getSongDetail({
+      ids: songIds
+    })
+    console.log(songData)
+    this.list = songData.songs.map(function(item: any): Song{
       return {
         id: item.id,
         name:item.name,
@@ -63,6 +76,10 @@ export default class PlayList extends Vue {
       }
     })
   }
+  private get pageType(){
+    const routeName = this.$route.name
+    return pageType[routeName]
+  } 
 }
 </script>
 
