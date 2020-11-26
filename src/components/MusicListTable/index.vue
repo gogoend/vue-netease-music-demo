@@ -12,6 +12,15 @@
         v-bind="{ ...item }"
       ></el-table-column>
     </el-table>
+    <el-pagination
+      :hide-on-single-page="false"
+      :page-size="perPageCount"
+      :total="totalCount"
+      :current-page="currentPage"
+      @size-change="handlePageSizeChange"
+      @current-change="handlePageChange"
+      :page-sizes="[10,20,50,100]"
+    ></el-pagination>
   </section>
 </template>
 
@@ -58,14 +67,54 @@ class MusicListTable extends Vue {
   @Prop({
       type: Array,
       default:()=>[]
-  }) extraCol!: []
+  }) 
+  private extraCol!: [];
+
   private tableFields = [];
+
+  @Prop({
+    type: Function,
+    default: null
+  }) private backendAPI!: Promise<any> | null
+
+  @Prop({
+    type: Object,
+    default:()=>({})
+  })
+  private params!: {}
+
   private created () {
       this.tableFields = [...tableFields, ...this.extraCol]
   }
 
   @playerModule.Getter("playingNow")
   private playingNow!: PlayingNow | null;
+
+  private perPageCount = 10
+
+  private totalCount = 0
+
+  private currentPage = 1
+
+  private async getData(){
+    const res = await this.backendAPI({
+      limit: this.perPageCount,
+      offset: this.currentPage - 1,
+      ...this.params
+    })
+    console.log(res)
+  }
+
+  private handlePageChange(page: number){
+    this.currentPage = page
+    this.getData()
+  }
+
+  private handlePageSizeChange(perPageCount: number){
+    this.perPageCount = perPageCount
+    this.currentPage = 1
+    this.getData()
+  }
 
 }
 
