@@ -5,9 +5,14 @@
       >相关的搜索结果共有 {{ count === null ? "..." : count }} 条
     </section>
     <music-list-table
-      :data="list"
+      :backendAPI="getSearchResult"
       @row-click="handleRowClick"
       :extraCol="tableFields"
+      :params="{
+        keywords: $route.params.kw
+      }"
+      count-field="songCount"
+      result-field="songs"
      />
   </div>
 </template>
@@ -28,6 +33,7 @@ import clickToPlayTableMixin from "@/mixin/clickToListenTableMixin.ts"
   mixins: [ clickToPlayTableMixin ]
 })
 class Search extends Vue {
+  private getSearchResult = search
   private list: Song[] = [];
   private count: number | null = null;
   private downloadProgress = 0;
@@ -57,7 +63,7 @@ class Search extends Vue {
   private downloadingMsg: any[] = [];
 
   private async created() {
-    this.getSearchResult();
+    // this.getSearchResult();
   }
   private handleDownloadProgress(ev: ProgressEvent, id: number) {
     const msgComponent = this.downloadingMsg[id];
@@ -89,23 +95,23 @@ class Search extends Vue {
       `${row.name.trim()}${allArtistsName ? " - " + allArtistsName : ""}`
     );
   }
-  private async getSearchResult() {
-    this.list = [];
-    this.count = null;
-    const { data } = await search({
-      keywords: this.$route.params.kw,
-    });
-    if (data.code === 200) {
-      const { result } = data;
-      this.count = result.songCount;
-      this.list = result.songs;
-    }
-  }
+  // private async getSearchResult() {
+  //   this.list = [];
+  //   this.count = null;
+  //   const { data } = await search({
+  //     keywords: this.$route.params.kw,
+  //   });
+  //   if (data.code === 200) {
+  //     const { result } = data;
+  //     this.count = result.songCount;
+  //     this.list = result.songs;
+  //   }
+  // }
   @Watch("$route.params.kw", {
     immediate: false,
   })
   private routerChange(): void {
-    this.getSearchResult();
+    // this.getSearchResult();
   }
 }
 

@@ -4,7 +4,6 @@
     <el-tabs>
       <el-tab-pane label="歌曲列表">
       <music-list-table
-        :data="list"
         @row-click="handleRowClick"
       />
       </el-tab-pane>

@@ -5,6 +5,7 @@
       v-on="$listeners"
       style="width: 100%; user-select: none"
       stripe
+      :data="renderedData"
     >
       <el-table-column
         v-for="item in tableFields"
@@ -72,6 +73,8 @@ class MusicListTable extends Vue {
 
   private tableFields = [];
 
+  private renderedData = [];
+
   @Prop({
     type: Function,
     default: null
@@ -85,6 +88,7 @@ class MusicListTable extends Vue {
 
   private created () {
       this.tableFields = [...tableFields, ...this.extraCol]
+      this.getData()
   }
 
   @playerModule.Getter("playingNow")
@@ -96,13 +100,29 @@ class MusicListTable extends Vue {
 
   private currentPage = 1
 
+  @Prop({
+    type: String,
+    default: ''
+  })
+  private countField !: string
+
+  @Prop({
+    type: String,
+    default: ''
+  })
+  private resultField !: string
+
   private async getData(){
-    const res = await this.backendAPI({
-      limit: this.perPageCount,
-      offset: this.currentPage - 1,
-      ...this.params
-    })
-    console.log(res)
+    if(typeof this.backendAPI === 'function'){
+      const { data } = await this.backendAPI({
+        limit: this.perPageCount,
+        offset: this.currentPage - 1,
+        ...this.params
+      })
+      this.totalCount = data.result[this.countField]
+      this.renderedData = data.result[this.resultField]
+    }
+    // this.renderedData
   }
 
   private handlePageChange(page: number){
